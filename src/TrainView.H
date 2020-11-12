@@ -1,26 +1,26 @@
 /************************************************************************
-     File:        TrainView.H
+	 File:        TrainView.H
 
-     Author:     
-                  Michael Gleicher, gleicher@cs.wisc.edu
+	 Author:
+				  Michael Gleicher, gleicher@cs.wisc.edu
 
-     Modifier
-                  Yu-Chi Lai, yu-chi@cs.wisc.edu
-     
-     Comment:     
-						The TrainView is the window that actually shows the 
+	 Modifier
+				  Yu-Chi Lai, yu-chi@cs.wisc.edu
+
+	 Comment:
+						The TrainView is the window that actually shows the
 						train. Its a
-						GL display canvas (Fl_Gl_Window).  It is held within 
+						GL display canvas (Fl_Gl_Window).  It is held within
 						a TrainWindow
-						that is the outer window with all the widgets. 
-						The TrainView needs 
-						to be aware of the window - since it might need to 
+						that is the outer window with all the widgets.
+						The TrainView needs
+						to be aware of the window - since it might need to
 						check the widgets to see how to draw
 
-	  Note:        we need to have pointers to this, but maybe not know 
+	  Note:        we need to have pointers to this, but maybe not know
 						about it (beware circular references)
 
-     Platform:    Visio Studio.Net 2003/2005
+	 Platform:    Visio Studio.Net 2003/2005
 
 *************************************************************************/
 
@@ -50,36 +50,50 @@ class CTrack;
 
 // this uses the old ArcBall Code
 #include "Utilities/ArcBallCam.H"
+#include "Utilities/Pnt3f.H"
 
 class TrainView : public Fl_Gl_Window
 {
-	public:
-		// note that we keep the "standard widget" constructor arguments
-		TrainView(int x, int y, int w, int h, const char* l = 0);
+public:
+	// note that we keep the "standard widget" constructor arguments
+	TrainView(int x, int y, int w, int h, const char* l = 0);
 
-		// overrides of important window things
-		virtual int handle(int);
-		virtual void draw();
+	// overrides of important window things
+	virtual int handle(int);
+	virtual void draw();
 
-		// all of the actual drawing happens in this routine
-		// it has to be encapsulated, since we draw differently if
-		// we're drawing shadows (no colors, for example)
-		void drawStuff(bool doingShadows=false);
+	// all of the actual drawing happens in this routine
+	// it has to be encapsulated, since we draw differently if
+	// we're drawing shadows (no colors, for example)
+	void drawStuff(bool doingShadows = false);
 
-		// setup the projection - assuming that the projection stack has been
-		// cleared for you
-		void setProjection();
+	// setup the projection - assuming that the projection stack has been
+	// cleared for you
+	void setProjection();
 
-		// Reset the Arc ball control
-		void resetArcball();
+	// Reset the Arc ball control
+	void resetArcball();
 
-		// pick a point (for when the mouse goes down)
-		void doPick();
+	// pick a point (for when the mouse goes down)
+	void doPick();
 
-	public:
-		ArcBallCam		arcball;			// keep an ArcBall for the UI
-		int				selectedCube;  // simple - just remember which cube is selected
+	void getPnt3f(float, Pnt3f&, Pnt3f&, Pnt3f&);
 
-		TrainWindow*	tw;				// The parent of this display window
-		CTrack*			m_pTrack;		// The track of the entire scene
+public:
+	ArcBallCam		arcball;			// keep an ArcBall for the UI
+	int				selectedCube;  // simple - just remember which cube is selected
+
+	TrainWindow* tw;				// The parent of this display window
+	CTrack* m_pTrack;		// The track of the entire scene
+
+
+
+	int DIVIDE_LINE = 10;
+	float train_length = 10;
+	float train_width = 5;
+	float train_height = 6;
+
+	float t_time = 0.0;
 };
+
+Pnt3f Matrix_Multiple(const float matrix[4][4], const float* t, Pnt3f* g, float r);
